@@ -78,11 +78,11 @@ export class App extends React.Component {
   }
 
   fetchImage = async (inputValue, page) => {
-    const URL = 'https://pixabay.com/api';
+    // const URL = 'https://pixabay.com/api';
     const apiKey = '36761808-85f8f6dd9a9f7c71c5d90744b';
     try {
       const response = await axios.get(
-        `${URL}/?q=${inputValue}&page=${page}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`
+        `https://pixabay.com/api/?q=${inputValue}&page=${page}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`
       );
 
       return response.data.hits.map(image => ({
