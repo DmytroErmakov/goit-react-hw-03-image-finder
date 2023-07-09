@@ -6,7 +6,7 @@ import styles from './Searchbar.module.css';
 export const Searchbar = ({ onSubmit }) => {
   const handleSubmit = event => {
     event.preventDefault();
-    const inputForSearch = event.target.elements.inputForSearch.value;
+    const inputForSearch = event.target.inputForSearch.value;
     onSubmit(inputForSearch);
   };
 
