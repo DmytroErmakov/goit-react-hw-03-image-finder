@@ -22,15 +22,15 @@ export class App extends React.Component {
   handleSubmit = async event => {
     event.preventDefault();
     this.setState({ isLoading: true });
-    const inputForSearch = event.target.elements.inputForSearch;
-    console.log(inputForSearch.value);
-    if (inputForSearch.value.trim() === '') {
+    const inputValue = event.target.elements.inputForSearch.value;
+
+    if (inputValue.trim() === '') {
       return;
     }
-    const response = await this.fetchImage(inputForSearch.value, 1);
+    const response = await this.fetchImage(inputValue, 1);
     this.setState({
       images: response,
-      currentSearch: inputForSearch.value,
+      currentSearch: inputValue,
       isLoading: false,
       page: 1,
     });
@@ -78,11 +78,11 @@ export class App extends React.Component {
   }
 
   fetchImage = async (inputValue, page) => {
-    axios.defaults.baseURL = 'https://pixabay.com/api';
+    const URL = 'https://pixabay.com/api';
     const apiKey = '36761808-85f8f6dd9a9f7c71c5d90744b';
     try {
       const response = await axios.get(
-        `/?q=${inputValue}&page=${page}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`
+        `${URL}/?q=${inputValue}&page=${page}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`
       );
 
       return response.data.hits.map(image => ({
