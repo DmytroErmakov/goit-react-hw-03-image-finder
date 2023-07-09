@@ -7,7 +7,6 @@ import { Loader } from './Loader/Loader';
 import { Modal } from './Modal/Modal';
 import styles from './App.module.css';
 
-
 export class App extends React.Component {
   state = {
     images: [],
@@ -17,16 +16,18 @@ export class App extends React.Component {
     modalOpen: false,
     modalImg: '',
     modalAlt: '',
+    error: null,
   };
 
   handleSubmit = async event => {
     event.preventDefault();
     this.setState({ isLoading: true });
-    const inputForSearch = event.target.element.inputForSearch;
+    const inputForSearch = event.target.elements.inputForSearch;
+    console.log(inputForSearch.value);
     if (inputForSearch.value.trim() === '') {
       return;
     }
-    const response = await fetchImage(inputForSearch.value, 1);
+    const response = await this.fetchImage(inputForSearch.value, 1);
     this.setState({
       images: response,
       currentSearch: inputForSearch.value,
@@ -36,20 +37,20 @@ export class App extends React.Component {
   };
 
   handleClickMore = async () => {
-    const response = await fetchImage(
+    const response = await this.fetchImage(
       this.state.currentSearch,
       this.state.page + 1
     );
-    this.setState({
-      images: [...this.state.images, ...response],
-      page: this.state.page + 1,
-    });
+    this.setState(prevState => ({
+      images: [...prevState.images, ...response],
+      page: prevState.page + 1,
+    }));
   };
 
   handleImageClick = event => {
     this.setState({
       modalOpen: true,
-      modadlAlt: event.target.alt,
+      modalAlt: event.target.alt,
       modalImg: event.target.name,
     });
   };
@@ -62,9 +63,9 @@ export class App extends React.Component {
     });
   };
 
-  handleKeyDonw = event => {
+  handleKeyDown = event => {
     if (event.code === 'Escape') {
-      this.nahdleModal.Close();
+      this.handleModalClose();
     }
   };
 
@@ -72,36 +73,56 @@ export class App extends React.Component {
     window.addEventListener('keydown', this.handleKeyDown);
   }
 
-componentWillUnmount() {
+  componentWillUnmount() {
     window.removeEventListener('keydown', this.handleKeyDown);
   }
 
-  fetchImage = async (query, page) => {
-    // Реализуйте логику для получения изображений
+  fetchImage = async (inputValue, page) => {
+    axios.defaults.baseURL = 'https://pixabay.com/api';
+    const apiKey = '36761808-85f8f6dd9a9f7c71c5d90744b';
+    try {
+      const response = await axios.get(
+        `/?q=${inputValue}&page=${page}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`
+      );
+
+      return response.data.hits.map(image => ({
+        id: image.id,
+        webformatURL: image.webformatURL,
+        largeImageURL: image.largeImageURL,
+        tags: image.tags,
+      }));
+    } catch (error) {
+      this.setState({ error: error });
+    } finally {
+      this.setState({ isLoading: false });
+    }
   };
 
-
-
-
   render() {
-    return {
+    const { images, isLoading, modalOpen, modalImg, modalAlt } = this.state;
+
+    return (
       <div className={styles.App}>
-    {this.state.isLoading ? (<Loader />) : (
-         <React.Fragment>
-        <Searchbar onSubmit={this.handleSubmit} />
-          <ImageGallery onImageClick={this.handleImageClick} images={this.state.images} />
-       {this.state.images.length > 0 ? (<Button onClick={this.handleClickMore} /> ) : null}
-               </React.Fragment>)
-    }
-    {
-      this.state.modalOpen ? (
-        <Modal src={this.state.modalImg}
-          alt={this.state.modalAlt}
-          handleClose={this.handleModalClose} />) : null
-    }
-    </ >
-      
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <>
+            <Searchbar onSubmit={this.handleSubmit} />
+            <ImageGallery
+              onImageClick={this.handleImageClick}
+              images={images}
+            />
+            {images.length > 0 && <Button onClick={this.handleClickMore} />}
+          </>
+        )}
+        {modalOpen && (
+          <Modal
+            image={modalImg}
+            alt={modalAlt}
+            onClose={this.handleModalClose}
+          />
+        )}
+      </div>
     );
   }
-
 }
