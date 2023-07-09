@@ -12,7 +12,7 @@ export const Modal = ({ src, alt, handleClose }) => (
 );
 
 Modal.propTypes = {
-  srs: PropTypes.string.isRequired,
+  src: PropTypes.string.isRequired,
   alt: PropTypes.string.isRequired,
   handleClose: PropTypes.func.isRequired,
 };

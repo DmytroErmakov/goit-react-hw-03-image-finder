@@ -13,8 +13,8 @@ export const Searchbar = ({ onSubmit }) => (
       <input
         className={styles.input}
         type="text"
-        autocomplete="off"
-        autofocus
+        autoComplete="off"
+        autoFocus
         placeholder="Search images and photos"
       />
     </form>
@@ -22,5 +22,5 @@ export const Searchbar = ({ onSubmit }) => (
 );
 
 Searchbar.propTypes = {
-  onSubmit: PropTypes.func,
+  onSubmit: PropTypes.func.isRequired,
 };

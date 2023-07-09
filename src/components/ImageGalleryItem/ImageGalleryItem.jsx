@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import styles from './ImageGalleryItem.module.css';
 
-export const ImageGalleryItem = ({ image, onClick }) => {
+export const ImageGalleryItem = ({ image, onClick }) => (
   <li className={styles.galleryItem} id={image.id} onClick={onClick}>
     <img
       src={image.webformatURL}
@@ -11,8 +11,8 @@ export const ImageGalleryItem = ({ image, onClick }) => {
       name={image.largeImageUrl}
       className={styles.galleryItemImage}
     />
-  </li>;
-};
+  </li>
+);
 
 ImageGalleryItem.propsTypes = {
   image: PropTypes.object.isRequired,
