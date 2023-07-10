@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import styles from './Modal.module.css';
 
-export const Modal = ({ src, alt, onClose }) => (
-  <div className={styles.overlay} onClick={onClose}>
+export const Modal = ({ src, alt, handleClose }) => (
+  <div className={styles.overlay} onClick={handleClose}>
     <div className={styles.modal}>
       <img src={src} alt={alt} />
     </div>
@@ -14,5 +14,5 @@ export const Modal = ({ src, alt, onClose }) => (
 Modal.propTypes = {
   src: PropTypes.string.isRequired,
   alt: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
 };

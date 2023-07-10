@@ -16,22 +16,21 @@ export class App extends React.Component {
     modalOpen: false,
     modalImg: '',
     modalAlt: '',
-    error: null,
   };
 
   handleSubmit = async event => {
     event.preventDefault();
     this.setState({ isLoading: true });
-    const inputValue = event.target.elements.inputForSearch.value;
+    const inputForSearch = event.target.elements.inputForSearch;
 
-    if (inputValue.trim() === '') {
+    if (inputForSearch.value.trim() === '') {
       return;
     }
-    const response = await this.fetchImage(inputValue, 1);
+    const response = await this.fetchImage(inputForSearch.value, 1);
     this.setState({
       images: response,
-      currentSearch: inputValue,
       isLoading: false,
+      currentSearch: inputForSearch.value,
       page: 1,
     });
   };
@@ -41,10 +40,10 @@ export class App extends React.Component {
       this.state.currentSearch,
       this.state.page + 1
     );
-    this.setState(prevState => ({
-      images: [...prevState.images, ...response],
-      page: prevState.page + 1,
-    }));
+    this.setState({
+      images: [...this.state.images, ...response],
+      page: this.state.page + 1,
+    });
   };
 
   handleImageClick = event => {
@@ -80,48 +79,45 @@ export class App extends React.Component {
   fetchImage = async (inputValue, page) => {
     const URL = 'https://pixabay.com/api';
     const apiKey = '36761808-85f8f6dd9a9f7c71c5d90744b';
-    try {
-      const response = await axios.get(
-        `${URL}/?q=${inputValue}&page=${page}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`
-      );
 
-      return response.data.hits.map(image => ({
+    const response = await axios.get(
+      `${URL}/?q=${inputValue}&page=${page}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`
+    );
+
+    return response.data.hits.map(image => {
+      return {
         id: image.id,
         webformatURL: image.webformatURL,
         largeImageURL: image.largeImageURL,
         tags: image.tags,
-      }));
-    } catch (error) {
-      this.setState({ error: error });
-    } finally {
-      this.setState({ isLoading: false });
-    }
+      };
+    });
   };
 
   render() {
-    const { images, isLoading, modalOpen, modalImg, modalAlt } = this.state;
-
     return (
       <div className={styles.App}>
-        {isLoading ? (
+        {this.state.isLoading ? (
           <Loader />
         ) : (
           <>
             <Searchbar onSubmit={this.handleSubmit} />
             <ImageGallery
               onImageClick={this.handleImageClick}
-              images={images}
+              images={this.state.images}
             />
-            {images.length > 0 && <Button onClick={this.handleClickMore} />}
+            {this.state.images.length > 0 ? (
+              <Button onClick={this.handleClickMore} />
+            ) : null}
           </>
         )}
-        {modalOpen && (
+        {this.state.modalOpen ? (
           <Modal
-            image={modalImg}
-            alt={modalAlt}
-            onClose={this.handleModalClose}
+            image={this.state.modalImg}
+            alt={this.state.modalAlt}
+            handleClose={this.handleModalClose}
           />
-        )}
+        ) : null}
       </div>
     );
   }
