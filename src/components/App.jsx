@@ -72,9 +72,9 @@ export class App extends React.Component {
     window.addEventListener('keydown', this.handleKeyDown);
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown);
-  }
+  // componentWillUnmount() {
+  //   window.removeEventListener('keydown', this.handleKeyDown);
+  // }
 
   fetchImage = async (inputValue, page) => {
     const URL = 'https://pixabay.com/api';
@@ -113,7 +113,7 @@ export class App extends React.Component {
         )}
         {this.state.modalOpen ? (
           <Modal
-            image={this.state.modalImg}
+            src={this.state.modalImg}
             alt={this.state.modalAlt}
             handleClose={this.handleModalClose}
           />

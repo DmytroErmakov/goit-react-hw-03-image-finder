@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import styles from './Searchbar.module.css';
 
 export const Searchbar = ({ onSubmit }) => (
+  
   <header className={styles.searchbar}>
     <form className={styles.form} onSubmit={onSubmit}>
       <button type="submit" className={styles.button}>
