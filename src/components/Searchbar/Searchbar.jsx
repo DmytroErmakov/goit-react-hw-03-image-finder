@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import styles from './Searchbar.module.css';
 
 export const Searchbar = ({ onSubmit }) => (
-  
   <header className={styles.searchbar}>
     <form className={styles.form} onSubmit={onSubmit}>
       <button type="submit" className={styles.button}>
@@ -12,12 +11,12 @@ export const Searchbar = ({ onSubmit }) => (
       </button>
 
       <input
+        name="inputForSearch"
         className={styles.input}
         type="text"
         autoComplete="off"
         autoFocus
         placeholder="Search images and photos"
-        name="inputForSearch"
       />
     </form>
   </header>

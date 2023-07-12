@@ -8,7 +8,7 @@ export const ImageGalleryItem = ({ image, onClick }) => (
     <img
       src={image.webformatURL}
       alt={image.tags}
-      name={image.largeImageUrl}
+      name={image.largeImageURL}
       className={styles.galleryItemImage}
     />
   </li>
